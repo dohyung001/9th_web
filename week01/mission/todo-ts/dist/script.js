@@ -19,6 +19,8 @@ const getInput = () => {
     return todoInput.value.trim();
 };
 const addTodo = () => {
+    if (!getInput())
+        return;
     todos.push({
         id: todos.length + 1,
         text: getInput(),

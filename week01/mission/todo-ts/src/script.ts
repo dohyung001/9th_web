@@ -32,6 +32,7 @@ const getInput = (): string => {
 
 // todo 추가함수
 const addTodo = () => {
+  if (!getInput()) return;
   todos.push({
     id: todos.length + 1,
     text: getInput(),
