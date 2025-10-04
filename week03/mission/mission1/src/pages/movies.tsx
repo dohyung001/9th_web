@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Movie, MovieResponse } from "../types/movie";
 import axios from "axios";
-
+import MovieCard from "../components/movieCard";
 const MoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
@@ -22,15 +22,22 @@ const MoviesPage = () => {
   }, []);
 
   return (
-    <ul>
+    <div className="p-8  min-h-screen w-screen">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {movies?.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MoviesPage;
+/*     <ul>
       {movies?.map((movie) => (
         <li key={movie.id}>
           <h2>{movie.title}</h2>
           <p>{movie.release_date}</p>
         </li>
       ))}
-    </ul>
-  );
-};
-
-export default MoviesPage;
+    </ul> */
