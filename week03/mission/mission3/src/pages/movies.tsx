@@ -13,7 +13,6 @@ const MoviesPage = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const { category } = useParams<{ category: string }>();
-
   const getEndpoint = () => {
     switch (category) {
       case "popular":
@@ -41,7 +40,7 @@ const MoviesPage = () => {
           `https://api.themoviedb.org/3/movie/${endpoint}?language=ko-KR&page=${currentPage}`,
           {
             headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1YjFlMWVhOTgxMTEyYmU0ZjFkNDRjZjRjNjQ0YjQ5MCIsIm5iZiI6MTcxMzE4MjQzMS42OTkwMDAxLCJzdWIiOiI2NjFkMTZkZjFlNjQ4OTAxNjJkNDZlMDEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.ZSq0Lqatym8bqYS2KxZRvtc89Ep2lDxjcM94rOM5zFQ`,
+              Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
             },
           }
         );
@@ -97,7 +96,7 @@ const MoviesPage = () => {
           이전
         </button>
 
-        <span className="text-black font-semibold">{currentPage}</span>
+        <span className="text-white font-semibold">{currentPage}</span>
 
         <button
           onClick={() => setCurrentPage((prev) => prev + 1)}

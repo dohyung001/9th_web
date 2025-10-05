@@ -1,6 +1,10 @@
 // src/pages/home.tsx
 const HomePage = () => {
-  return <h1>Home Page 야호~!</h1>;
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <h1 className="text-4xl text-white">Home Page!</h1>
+    </div>
+  );
 };
 
 export default HomePage;
