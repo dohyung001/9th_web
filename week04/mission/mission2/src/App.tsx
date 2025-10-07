@@ -1,29 +1,40 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import HomePage from "./pages/home";
-import NotFound from "./pages/not-found";
-import Movies from "./pages/movies";
+import HomePage from "./pages/Home";
+
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import RootLayout from "./layout/root-layout";
-import MovieDetailPage from "./pages/movie-detail";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    errorElement: <NotFound />,
     children: [
       {
         index: true,
         element: <HomePage />,
       },
+    ],
+  },
+  {
+    path: "/signup",
+    element: <RootLayout />,
+    children: [
       {
-        path: "movies/:category",
-        element: <Movies />,
+        index: true,
+        element: <Signup />,
       },
+    ],
+  },
+  {
+    path: "/login",
+    element: <RootLayout />,
+    children: [
       {
-        path: "moviedetail/:movieId",
-        element: <MovieDetailPage />,
+        index: true,
+        element: <Login />,
       },
     ],
   },
