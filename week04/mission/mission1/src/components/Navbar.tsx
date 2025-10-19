@@ -1,4 +1,4 @@
-import CustomLink from "./customLink";
+import CustomLink from "./CustomLink";
 const Navbar = () => {
   return (
     <nav className="flex gap-4 p-4">

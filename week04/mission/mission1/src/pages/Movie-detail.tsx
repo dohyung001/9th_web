@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import LoadingSpinner from "../components/loadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import type { MovieDetails, Credits } from "../types/movie";
 import useCustomFetch from "../hooks/useCustomFetch";
 

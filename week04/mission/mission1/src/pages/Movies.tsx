@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import MovieCard from "../components/movieCard";
-import LoadingSpinner from "../components/loadingSpinner";
+import MovieCard from "../components/MovieCard";
+import LoadingSpinner from "../components/LoadingSpinner";
 import useCustomFetch from "../hooks/useCustomFetch";
 import type { MovieResponse } from "../types/movie";
 

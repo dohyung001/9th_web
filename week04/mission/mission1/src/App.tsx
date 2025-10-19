@@ -1,11 +1,11 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import HomePage from "./pages/home";
-import NotFound from "./pages/not-found";
-import Movies from "./pages/movies";
-import RootLayout from "./layout/root-layout";
-import MovieDetailPage from "./pages/movie-detail";
+import HomePage from "./pages/Home";
+import NotFound from "./pages/Not-found";
+import Movies from "./pages/Movies";
+import RootLayout from "./layout/Root-layout";
+import MovieDetailPage from "./pages/Movie-detail";
 
 const router = createBrowserRouter([
   {
