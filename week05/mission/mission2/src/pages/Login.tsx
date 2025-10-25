@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "../schemas/authSchema";
 import { useAuth } from "../context/authContext";
-import GoogleLoginButton from "../components/GoogleLoginButton";
+
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -40,7 +40,6 @@ export default function Login() {
 
         {/* 로그인 폼 */}
         <div className="bg-gray-800 rounded-lg p-8">
-          <GoogleLoginButton />
           <h1 className="text-white text-3xl font-bold mb-8 text-center">
             로그인
           </h1>

@@ -5,7 +5,6 @@ export default function ProtectedLayout() {
   const { accessToken } = useAuth();
 
   if (!accessToken) {
-    console.log("토큰 없으면 가라");
     return <Navigate to="/login" replace />;
   }
 
