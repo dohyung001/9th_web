@@ -7,6 +7,7 @@ interface AuthContextType {
   refreshToken: string | null;
   login: (signInData: LoginRequest) => void;
   logout: () => Promise<void>;
+  setTokens: (access: string, refresh: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -28,7 +29,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       throw error;
     }
   };
-
+  const setTokens = (access: string, refresh: string) => {
+    setAccessToken(access);
+    setRefreshToken(refresh);
+  };
   const logout = async () => {
     try {
       postSignout();
@@ -46,6 +50,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         refreshToken,
         login,
         logout,
+        setTokens,
       }}
     >
       {children}

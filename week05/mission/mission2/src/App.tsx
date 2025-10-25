@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import RootLayout from "./layout/root-layout";
 import ProtectedLayout from "./layout/protected-layout";
 import { AuthProvider } from "./context/authContext";
+import GoogleCallback from "./pages/GoogleCallback";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
         element: <Login />,
       },
     ],
+  },
+  {
+    path: "/v1/auth/google/callback",
+    element: <GoogleCallback />,
   },
 ]);
 
