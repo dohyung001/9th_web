@@ -29,14 +29,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         <nav className="p-6 flex flex-col gap-4 mt-20 md:mt-0">
           <Link
-            to="/lps"
+            to="/"
             className="text-white hover:text-pink-500"
             onClick={onClose}
           >
             찾기
           </Link>
           <Link
-            to="/mypage"
+            to="/"
             className="text-white hover:text-pink-500"
             onClick={onClose}
           >
