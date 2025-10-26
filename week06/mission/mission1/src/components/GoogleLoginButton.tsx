@@ -1,12 +1,20 @@
+import { useLocation } from "react-router-dom";
+
 export default function GoogleLoginButton() {
+  const location = useLocation();
+
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8000/v1/auth/google/login";
+    const from = location.state?.from || "/";
+    const redirectUrl = `http://localhost:8000/v1/auth/google/login?redirect=${encodeURIComponent(
+      from
+    )}`;
+    window.location.href = redirectUrl;
   };
 
   return (
     <button
       onClick={handleGoogleLogin}
-      className="w-full py-3 bg-white rounded-lg font-semibold text-gray-900 flex items-center justify-center gap-3 hover:bg-gray-100 transition-colors border border-gray-300"
+      className="w-full py-3 mb-6 bg-white rounded-lg font-semibold text-gray-900 flex items-center justify-center gap-3 hover:bg-gray-100 transition-colors border border-gray-300"
     >
       <svg width="20" height="20" viewBox="0 0 20 20">
         <path

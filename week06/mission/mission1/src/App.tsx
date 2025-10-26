@@ -7,6 +7,10 @@ import RootLayout from "./layout/root-layout";
 import ProtectedLayout from "./layout/protected-layout";
 import { AuthProvider } from "./context/authContext";
 import GoogleCallback from "./pages/GoogleCallback";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import LpDetailPage from "./pages/LpDetailPage";
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -19,6 +23,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
+          },
+          {
+            path: "/lp/:lpid",
+            element: <LpDetailPage />,
           },
         ],
       },
@@ -52,9 +60,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

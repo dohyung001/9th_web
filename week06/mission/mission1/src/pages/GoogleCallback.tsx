@@ -20,24 +20,10 @@ export default function GoogleCallback() {
 
     const accessToken = params.get("accessToken");
     const refreshToken = params.get("refreshToken");
-    const userId = params.get("userId");
     const name = params.get("name");
 
     if (accessToken && refreshToken) {
-      setTokens(accessToken, refreshToken);
-
-      // 사용자 정보 저장
-      if (userId && name) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            id: userId,
-            name: decodeURIComponent(name),
-          })
-        );
-      }
-
-      console.log(" 토큰 저장 완료!");
+      setTokens(accessToken, refreshToken, name);
 
       navigate("/");
     } else {
