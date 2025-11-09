@@ -6,7 +6,13 @@ import {
 } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { getLpDetail, updateLps, deleteLp, postLikes } from "../apis/lps";
+import {
+  getLpDetail,
+  updateLps,
+  deleteLp,
+  postLikes,
+  deleteLikes,
+} from "../apis/lps";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ErrorState from "../components/ErrorState";
 import {
@@ -43,11 +49,16 @@ export default function LpDetailPage() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  // LP 좋아요
+  // LP 좋아요/취소
   const toggleLikeMutation = useMutation({
-    mutationFn: () => postLikes(lpid!),
+    mutationFn: (isCurrentlyLiked: boolean) => {
+      return isCurrentlyLiked ? deleteLikes(lpid!) : postLikes(lpid!);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lp", lpid] });
+    },
+    onError: (error) => {
+      console.error(" 좋아요 토글 실패:", error);
     },
   });
 
@@ -58,19 +69,28 @@ export default function LpDetailPage() {
       content: string;
       thumbnail: string;
       tags: string[];
-    }) => updateLps(lpid!, value),
+    }) => {
+      return updateLps(lpid!, value);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lp", lpid] });
       setIsEditingLp(false);
+    },
+    onError: (error) => {
+      console.error(" LP 수정 실패:", error);
     },
   });
 
   // LP 삭제
   const deleteLpMutation = useMutation({
-    mutationFn: () => deleteLp(lpid!),
+    mutationFn: () => {
+      return deleteLp(lpid!);
+    },
     onSuccess: () => {
-      console.log("LP 삭제");
       navigate("/");
+    },
+    onError: (error) => {
+      console.error("LP 삭제 실패:", error);
     },
   });
 
@@ -212,7 +232,7 @@ export default function LpDetailPage() {
   };
 
   const handleLike = () => {
-    toggleLikeMutation.mutate();
+    toggleLikeMutation.mutate(isLiked);
   };
 
   const handleCommentSubmit = () => {
