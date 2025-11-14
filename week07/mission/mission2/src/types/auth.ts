@@ -1,3 +1,13 @@
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  bio: string | null;
+  avatar: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -27,15 +37,7 @@ export interface SignupResponse {
   status: boolean;
   statusCode: number;
   message: string;
-  data: {
-    id: number;
-    name: string;
-    email: string;
-    bio: string | null;
-    avatar: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  data: User;
 }
 
 export interface SignoutResponse {
@@ -49,15 +51,7 @@ export interface useMeResponse {
   status: boolean;
   message: string;
   statusCode: number;
-  data: {
-    id: number;
-    name: string;
-    email: string;
-    bio: string;
-    avatar: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  data: User;
 }
 
 export interface PatchUserRequest {
@@ -70,13 +64,5 @@ export interface PatchUserResponse {
   status: boolean;
   statusCode: number;
   message: string;
-  data: {
-    id: number;
-    name: string;
-    email: string;
-    bio: string | null;
-    avatar: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  data: User;
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/authContext";
 import { updateProfile } from "../apis/auth";
-
+import User from "../types/auth";
 export default function MyPage() {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
@@ -15,10 +15,37 @@ export default function MyPage() {
 
   const updateProfileMutation = useMutation({
     mutationFn: updateProfile,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+    onMutate: async (newProfile) => {
+      // 진행 중인 refetch 취소
+      await queryClient.cancelQueries({ queryKey: ["user"] });
+
+      // 이전 값 백업
+      const previousUser = queryClient.getQueryData(["user"]);
+
+      // 낙관적 업데이트
+      queryClient.setQueryData(["user"], (old: User) => ({
+        ...old,
+        ...newProfile,
+        avatar: previewUrl || old?.avatar,
+      }));
+
+      // 편집 모드 종료
       setIsEditing(false);
       setAvatarBase64(null);
+
+      return { previousUser };
+    },
+    onError: (err, newProfile, context) => {
+      // 에러 시 롤백
+      if (context?.previousUser) {
+        queryClient.setQueryData(["user"], context.previousUser);
+      }
+      alert("프로필 업데이트에 실패했습니다.");
+      setIsEditing(true);
+    },
+    onSettled: () => {
+      // 성공/실패 상관없이 최신 데이터로 동기화
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
 

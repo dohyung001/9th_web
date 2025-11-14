@@ -22,7 +22,7 @@ import {
   deleteComment,
 } from "../apis/comments";
 import { useAuth } from "../context/authContext";
-
+import type { Lp } from "../types/lps";
 interface Tag {
   id: number;
   text: string;
@@ -54,11 +54,39 @@ export default function LpDetailPage() {
     mutationFn: (isCurrentlyLiked: boolean) => {
       return isCurrentlyLiked ? deleteLikes(lpid!) : postLikes(lpid!);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["lp", lpid] });
+    onMutate: async (isCurrentlyLiked) => {
+      // 진행 중인 refetch 취소
+      await queryClient.cancelQueries({ queryKey: ["lp", lpid] });
+
+      // 이전 값 백업
+      const previousLp = queryClient.getQueryData(["lp", lpid]);
+
+      // 낙관적 업데이트
+      queryClient.setQueryData(["lp", lpid], (old: Lp) => {
+        if (!old || !user) return old;
+
+        const newLikes = isCurrentlyLiked
+          ? old.likes.filter((like) => like.userId !== user.id)
+          : [...old.likes, { userId: user.id }];
+
+        return {
+          ...old,
+          likes: newLikes,
+        };
+      });
+
+      return { previousLp };
     },
-    onError: (error) => {
-      console.error(" 좋아요 토글 실패:", error);
+    onError: (error, isCurrentlyLiked, context) => {
+      // 에러 시 롤백
+      if (context?.previousLp) {
+        queryClient.setQueryData(["lp", lpid], context.previousLp);
+      }
+      console.error("좋아요 토글 실패:", error);
+    },
+    onSettled: () => {
+      // 성공/실패 상관없이 최신 데이터로 동기화
+      queryClient.invalidateQueries({ queryKey: ["lp", lpid] });
     },
   });
 
