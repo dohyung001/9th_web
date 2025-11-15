@@ -3,11 +3,15 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLps } from "../apis/lps";
 import ErrorState from "../components/ErrorState";
+import useDebounce from "../hooks/useDebounce";
 
 export default function Home() {
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
   const observerTarget = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState("");
+
+  const debouncedInput = useDebounce<string>(input, 500);
 
   const {
     data,
@@ -18,11 +22,19 @@ export default function Home() {
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["lps", order],
+    queryKey: ["lps", order, debouncedInput],
+
     queryFn: ({ pageParam = 0 }) =>
-      getLps({ order, limit: 10, cursor: pageParam }),
+      getLps({
+        order,
+        limit: 10,
+        cursor: pageParam,
+        search: debouncedInput.trim(),
+      }),
+
     getNextPageParam: (lastPage) =>
       lastPage.hasNext ? lastPage.nextCursor : undefined,
+
     initialPageParam: 0,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
@@ -58,6 +70,14 @@ export default function Home() {
           {order === "desc" ? "최신순 ▼" : "오래된순 ▲"}
         </button>
       </div>
+
+      {/* 검색 */}
+      <input
+        placeholder="검색"
+        className="mb-4 text-white border-2 border-white p-2 w-full rounded-lg"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
 
       {/* 초기 로딩 스켈레톤 */}
       {isLoading && (
