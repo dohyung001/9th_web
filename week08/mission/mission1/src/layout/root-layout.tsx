@@ -2,17 +2,17 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import PlusButton from "../components/PlusButton";
-import { useState } from "react";
+
+import { useSidebar } from "../hooks/useSidebar";
 
 const RootLayout = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
+  const { close, isOpen, toggle } = useSidebar();
   return (
     <div className="flex flex-col h-screen">
-      <Navbar handleToggle={() => setIsOpen(!isOpen)} />
+      <Navbar handleToggle={toggle} />
 
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        <Sidebar isOpen={isOpen} onClose={close} />
         <main className="flex-1 overflow-auto">
           <Outlet />
           <PlusButton />
