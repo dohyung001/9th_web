@@ -4,14 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { getLps } from "../apis/lps";
 import ErrorState from "../components/ErrorState";
 import useDebounce from "../hooks/useDebounce";
+import useThrottle from "../hooks/useThrottle";
 
 export default function Home() {
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const navigate = useNavigate();
   const observerTarget = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
+  const [scrollTriggerCount, setScrollTriggerCount] = useState(0);
 
   const debouncedInput = useDebounce<string>(input, 500);
+  const throttledTriggerCount = useThrottle(scrollTriggerCount, 1000);
 
   const {
     data,
@@ -40,11 +43,17 @@ export default function Home() {
     gcTime: 1000 * 60 * 10,
   });
 
+  // Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+          console.log(
+            "Intersection detected:",
+            new Date().toLocaleTimeString()
+          );
+          // 카운터 증가
+          setScrollTriggerCount((prev) => prev + 1);
         }
       },
       { threshold: 0.1 }
@@ -55,7 +64,19 @@ export default function Home() {
     }
 
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage]);
+
+  // throttle된 카운터가 변경될 때만 fetchNextPage 실행
+  useEffect(() => {
+    if (throttledTriggerCount > 0) {
+      console.log(
+        "Throttled fetch triggered:",
+        new Date().toLocaleTimeString(),
+        `(count: ${throttledTriggerCount})`
+      );
+      fetchNextPage();
+    }
+  }, [throttledTriggerCount, fetchNextPage]);
 
   if (isError) return <ErrorState onRetry={refetch} />;
 
@@ -74,7 +95,7 @@ export default function Home() {
       {/* 검색 */}
       <input
         placeholder="검색"
-        className="mb-4 text-white border-2 border-white p-2 w-full rounded-lg"
+        className="mb-4 text-white border-2 border-white p-2 w-full rounded-lg bg-gray-800"
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
@@ -138,7 +159,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Intersection Observe */}
+      {/* Intersection Observer 트리거 */}
       <div ref={observerTarget} className="h-10" />
     </div>
   );
