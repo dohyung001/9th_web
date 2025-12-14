@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import TextInput from "../components/TextInput";
 import { findPrimeNumbers } from "../utils/findPrimeNumbers";
 
-export default function UseMemoPage(): Element {
+export default function UseMemoPage() {
   const [limit, setLimit] = useState<number>(0);
   const [text, setText] = useState<string>("");
 
